@@ -1,3 +1,3 @@
 #Finance Forum
 
-Social medial for stock market
+Social media for stock market
