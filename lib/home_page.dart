@@ -1,3 +1,4 @@
+import 'package:finance_forum/create_post.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'controller.dart';
@@ -8,6 +9,22 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (context) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: const CreatePost(),
+                );
+              });
+        },
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
           title: const Text(
             'Finance Forum',
