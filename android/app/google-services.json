@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "302085108348",
+    "project_id": "stock-feed-beea3",
+    "storage_bucket": "stock-feed-beea3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302085108348:android:ab9a775ca553d0961fcff9",
+        "android_client_info": {
+          "package_name": "com.example.finance_forum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302085108348-ff2dsemo6lgmqsgklj0svi3in5498oud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa81_GOPWUMBSttEsUQtlkBarwbKQWvfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302085108348-ff2dsemo6lgmqsgklj0svi3in5498oud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

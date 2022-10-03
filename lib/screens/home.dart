@@ -1,10 +1,10 @@
-import 'package:finance_forum/create_post.dart';
+import 'package:finance_forum/screens/create_post.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'controller.dart';
+import 'package:finance_forum/controller.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Home extends StatelessWidget {
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,8 @@ class HomePage extends StatelessWidget {
                       onTap: () {
                         Provider.of<Controller>(context, listen: false).theme();
                       }),
-                  PopupMenuItem(child: const Text('Log Out'), onTap: () {}),
+                  PopupMenuItem(child: const Text('Profile'), onTap: () {}),
+                  PopupMenuItem(child: const Text('Log Out'), onTap: () {})
                 ];
               },
             ),
