@@ -17,17 +17,20 @@ void main() async {
   ]));
 }
 
+final _scaffoldkey = GlobalKey<ScaffoldMessengerState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: _scaffoldkey,
         routes: {
           '/welcome': (context) => const Welcome(),
           '/home': (context) => const Home(),
           '/complete profile': (context) => const CompleteProfile(),
-          '/otp verify': (context) => const OtpVerify(),
+          '/verify otp': (context) => const OtpVerify(),
         },
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
