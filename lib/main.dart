@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:finance_forum/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,21 +18,12 @@ void main() async {
   ]));
 }
 
-final _scaffoldkey = GlobalKey<ScaffoldMessengerState>();
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      scaffoldMessengerKey: _scaffoldkey,
-        routes: {
-          '/welcome': (context) => const Welcome(),
-          '/home': (context) => const Home(),
-          '/complete profile': (context) => const CompleteProfile(),
-          '/verify otp': (context) => const OtpVerify(),
-        },
+    return GetMaterialApp(
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         themeMode: Provider.of<Controller>(context).mode,

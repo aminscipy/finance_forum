@@ -35,7 +35,6 @@ class OtpVerify extends StatelessWidget {
             TextButton(
               onPressed: () {
                 controller.verifyOtp();
-                Navigator.pushNamed(context, '/complete profile');
               },
               style: TextButton.styleFrom(backgroundColor: Colors.white),
               child: const Text(

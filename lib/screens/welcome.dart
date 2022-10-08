@@ -37,9 +37,8 @@ class Welcome extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () async {
+              onPressed: () {
                 controller.verifyPhone();
-                Navigator.pushNamed(context, '/verify otp');
               },
               style: TextButton.styleFrom(backgroundColor: Colors.white),
               child: const Text(

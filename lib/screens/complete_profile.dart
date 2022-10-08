@@ -1,5 +1,7 @@
+import 'package:finance_forum/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_forum/constants.dart';
+import 'package:get/get.dart';
 
 class CompleteProfile extends StatelessWidget {
   const CompleteProfile({super.key});
@@ -16,56 +18,22 @@ class CompleteProfile extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.white)),
           const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-            child: TextField(
-              cursorColor: Colors.red,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-              decoration: kInputDecoration.copyWith(hintText: 'Name'),
-            ),
+          const TextInputField(
+            hint: 'Name',
+            textInputType: TextInputType.name,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-            child: TextField(
-              cursorColor: Colors.red,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-              decoration: kInputDecoration.copyWith(hintText: 'Username'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-            child: TextField(
-              keyboardType: TextInputType.datetime,
-              cursorColor: Colors.red,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-              decoration: kInputDecoration.copyWith(hintText: 'DD-MM-YYYY'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-            child: TextField(
-              cursorColor: Colors.red,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-              decoration: kInputDecoration.copyWith(hintText: 'Gender'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-            child: TextField(
-              cursorColor: Colors.red,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-              decoration: kInputDecoration.copyWith(
-                  hintText: 'SEBI reg. number (optional)'),
-            ),
-          ),
+          const TextInputField(
+              hint: 'Username', textInputType: TextInputType.name),
+          const TextInputField(
+              hint: 'DD-MM-YYYY', textInputType: TextInputType.datetime),
+          const TextInputField(
+              hint: 'Gender', textInputType: TextInputType.name),
+          const TextInputField(
+              hint: 'SEBI reg. no. (optional)',
+              textInputType: TextInputType.name),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/home');
+              Get.to(() => const Home());
             },
             style: TextButton.styleFrom(backgroundColor: Colors.white),
             child: const Text(
