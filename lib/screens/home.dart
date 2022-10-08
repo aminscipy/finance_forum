@@ -49,7 +49,7 @@ class Home extends StatelessWidget {
                     PopupMenuItem(
                         child: const Text('Log Out'),
                         onTap: () {
-                          controller.logOut;
+                          controller.logOut();
                         })
                   ];
                 },

@@ -1,4 +1,5 @@
 import 'package:finance_forum/screens/complete_profile.dart';
+import 'package:finance_forum/screens/home.dart';
 import 'package:finance_forum/screens/otp_verify.dart';
 import 'package:finance_forum/screens/welcome.dart';
 import 'package:flutter/material.dart';
@@ -64,11 +65,34 @@ class Controller extends ChangeNotifier {
   }
 
   Future<void> logOut() async {
-    loading();
     await FirebaseAuth.instance.signOut();
     Get.close(1);
     getSnackBar('Logged out!', 'Login again.');
     Get.to(() => const Welcome());
     notifyListeners();
   }
+}
+
+statePersist() {
+  return StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.hasData) {
+            return const Home();
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('${snapshot.error}'),
+            );
+          }
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          );
+        }
+        return const Welcome();
+      });
 }
