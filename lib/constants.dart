@@ -20,16 +20,17 @@ const kInputDecoration = InputDecoration(
 
 class TextInputField extends StatelessWidget {
   const TextInputField(
-      {super.key, required this.hint, required this.textInputType});
+      {super.key, required this.hint, required this.textInputType, this.onChanged});
 
   final String hint;
   final TextInputType textInputType;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-        child: TextField(
+        child: TextField(onChanged: onChanged,
             keyboardType: textInputType,
             cursorColor: Colors.red,
             style: const TextStyle(
@@ -56,4 +57,3 @@ loading() {
     child: CircularProgressIndicator(color: Colors.white),
   ));
 }
-

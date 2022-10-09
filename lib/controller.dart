@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Controller extends ChangeNotifier {
   ThemeMode mode = ThemeMode.light;
@@ -52,10 +53,15 @@ class Controller extends ChangeNotifier {
     PhoneAuthCredential credential =
         PhoneAuthProvider.credential(verificationId: verID, smsCode: otp);
     try {
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      var user = await FirebaseAuth.instance.signInWithCredential(credential);
       Get.close(1);
-      getSnackBar('Verified!', 'You are Logged in.');
-      Get.to(() => const CompleteProfile());
+      if (user.additionalUserInfo!.isNewUser) {
+        getSnackBar('Welcome!', 'Please complete your profile.');
+        Get.to(() => const CompleteProfile());
+      } else {
+        getSnackBar('Verified!', 'You are Logged In.');
+        Get.to(() => const Home());
+      }
     } on FirebaseAuthException {
       Get.close(1);
       getSnackBar('Invalid OTP!', 'Please try again.');
@@ -65,10 +71,47 @@ class Controller extends ChangeNotifier {
   }
 
   Future<void> logOut() async {
-    await FirebaseAuth.instance.signOut();
-    Get.close(1);
-    getSnackBar('Logged out!', 'Login again.');
-    Get.to(() => const Welcome());
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.close(1);
+      getSnackBar('Logged out!', 'Login again.');
+      Get.to(() => const Welcome());
+      notifyListeners();
+    } catch (e) {
+      Get.close(1);
+      getSnackBar('Oops!', 'Something went wrong');
+    }
+  }
+
+  Future<void> completProfile(
+      {required String name,
+      required String username,
+      required String dob,
+      required String gender,
+      required String sebi}) async {
+    loading();
+    String? phoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
+    if (name != '' && dob != '' && username != '' && gender != '') {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(phoneNumber)
+          .set({
+        'phoneNumber': phoneNumber,
+        'username': username,
+        'name': name,
+        'sebi': sebi,
+        'gender': gender,
+        'dob': dob,
+        'followers': [],
+        'following': [],
+      });
+      Get.close(1);
+      getSnackBar('You are all set!', 'Start exlporing or add your own post');
+      Get.to(() => const Home());
+    } else {
+      Get.close(1);
+      getSnackBar('Oops!', 'Please fill in required fields.');
+    }
     notifyListeners();
   }
 }
