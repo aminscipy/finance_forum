@@ -1,14 +1,14 @@
-import 'package:finance_forum/screens/complete_profile.dart';
-import 'package:finance_forum/screens/home.dart';
-import 'package:finance_forum/screens/otp_verify.dart';
-import 'package:finance_forum/screens/welcome.dart';
+import 'package:finance_forum/views/complete_profile.dart';
+import 'package:finance_forum/views/home.dart';
+import 'package:finance_forum/views/otp_verify.dart';
+import 'package:finance_forum/views/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'constants.dart';
+import '../constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Controller extends ChangeNotifier {
+class AuthController extends ChangeNotifier {
   ThemeMode mode = ThemeMode.light;
   ThemeMode changeTheme() {
     notifyListeners();

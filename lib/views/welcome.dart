@@ -1,5 +1,5 @@
 import 'package:finance_forum/constants.dart';
-import 'package:finance_forum/controller.dart';
+import 'package:finance_forum/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,8 +10,8 @@ class Welcome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Controller>(
-      builder: (context, controller, child) => Scaffold(
+    return Consumer<AuthController>(
+      builder: (context, authController, child) => Scaffold(
         backgroundColor: Colors.blueAccent,
         body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -32,13 +32,13 @@ class Welcome extends StatelessWidget {
                 decoration:
                     kInputDecoration.copyWith(hintText: 'Enter mobile number'),
                 onChanged: (value) {
-                  controller.phoneNumber = value;
+                  authController.phoneNumber = value;
                 },
               ),
             ),
             TextButton(
               onPressed: () {
-                controller.verifyPhone();
+                authController.verifyPhone();
               },
               style: TextButton.styleFrom(backgroundColor: Colors.white),
               child: const Text(

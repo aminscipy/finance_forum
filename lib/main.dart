@@ -1,17 +1,21 @@
-import 'package:finance_forum/controller.dart';
+import 'package:finance_forum/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'controllers/profile_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-        create: (context) => Controller(),
-        builder: (context, child) => const MyApp())
-  ]));
+    ChangeNotifierProvider<AuthController>(
+      create: (context) => AuthController(),
+    ),
+    ChangeNotifierProvider<ProfileController>(
+      create: (context) => ProfileController(),
+    )
+  ], builder: (context, child) => const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
-        themeMode: Provider.of<Controller>(context).mode,
+        themeMode: Provider.of<AuthController>(context).mode,
         debugShowCheckedModeBanner: false,
         home: statePersist());
   }

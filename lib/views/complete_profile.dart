@@ -1,4 +1,4 @@
-import 'package:finance_forum/controller.dart';
+import 'package:finance_forum/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_forum/constants.dart';
 import 'package:provider/provider.dart';
@@ -60,12 +60,13 @@ class CompleteProfile extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Provider.of<Controller>(context, listen: false).completProfile(
-                  name: name,
-                  username: username,
-                  dob: dob,
-                  gender: gender,
-                  sebi: sebi);
+              Provider.of<AuthController>(context, listen: false)
+                  .completProfile(
+                      name: name,
+                      username: username,
+                      dob: dob,
+                      gender: gender,
+                      sebi: sebi);
             },
             style: TextButton.styleFrom(backgroundColor: Colors.white),
             child: const Text(

@@ -1,15 +1,17 @@
-import 'package:finance_forum/screens/create_post.dart';
+import 'package:finance_forum/views/create_post.dart';
+import 'package:finance_forum/views/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:finance_forum/controller.dart';
+import 'package:finance_forum/controllers/auth_controller.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Controller>(
-      builder: (context, controller, child) => Scaffold(
+    return Consumer<AuthController>(
+      builder: (context, authController, child) => Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             showModalBottomSheet(
@@ -43,17 +45,22 @@ class Home extends StatelessWidget {
                     PopupMenuItem(
                         child: const Text('Switch theme'),
                         onTap: () {
-                          controller.changeTheme();
+                          authController.changeTheme();
                         }),
-                    PopupMenuItem(child: const Text('Profile'), onTap: () {}),
+                    PopupMenuItem(
+                        child: const Text('Profile'),
+                        onTap: () async {
+                          await Future.delayed(Duration.zero);
+                          Get.to(() => const Profile());
+                        }),
                     PopupMenuItem(
                         child: const Text('Log Out'),
                         onTap: () {
-                          controller.logOut();
+                          authController.logOut();
                         })
                   ];
                 },
-              ),
+              )
             ]),
       ),
     );

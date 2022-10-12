@@ -20,7 +20,10 @@ const kInputDecoration = InputDecoration(
 
 class TextInputField extends StatelessWidget {
   const TextInputField(
-      {super.key, required this.hint, required this.textInputType, this.onChanged});
+      {super.key,
+      required this.hint,
+      required this.textInputType,
+      this.onChanged});
 
   final String hint;
   final TextInputType textInputType;
@@ -30,7 +33,8 @@ class TextInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-        child: TextField(onChanged: onChanged,
+        child: TextField(
+            onChanged: onChanged,
             keyboardType: textInputType,
             cursorColor: Colors.red,
             style: const TextStyle(
@@ -56,4 +60,18 @@ loading() {
   Get.dialog(const Center(
     child: CircularProgressIndicator(color: Colors.white),
   ));
+}
+
+tile(icon, field) {
+  return ListTile(
+      onTap: () {},
+      contentPadding: const EdgeInsets.symmetric(horizontal: 50),
+      leading: Icon(
+        icon,
+        color: Colors.white,
+      ),
+      title: Text(field,
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)));
 }
