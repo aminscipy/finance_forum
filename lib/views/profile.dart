@@ -13,28 +13,21 @@ class Profile extends StatelessWidget {
     return Consumer<ProfileController>(
         builder: (context, profileController, child) => SafeArea(
                 child: Scaffold(
-              backgroundColor:  Colors.blueAccent,
+              backgroundColor: Colors.blueAccent,
               body: Column(
                 children: [
-                  const SizedBox(height: 70),
-                  Stack(
-                    children: [
-                      const CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'),
-                        radius: 40,
-                      ),
-                      Positioned(
-                          bottom: -15,
-                          left: 40,
-                          child: IconButton(
-                            onPressed: () {
-                              // selectImage();
-                            },
-                            icon: const Icon(Icons.add_a_photo),
-                          ))
-                    ],
-                  ),
+                  const SizedBox(height: 40),
+                  GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: (() {
+                        profileController.profilePic();
+                      }),
+                      child: CircleAvatar(
+                        backgroundImage: const AssetImage('images/default.jpg'),
+                        foregroundImage:
+                            NetworkImage(profileController.profileUrl),
+                        radius: 60,
+                      )),
                   const SizedBox(
                     height: 30,
                   ),
