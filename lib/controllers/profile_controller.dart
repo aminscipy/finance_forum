@@ -24,7 +24,6 @@ class ProfileController extends ChangeNotifier {
 
   FirebaseStorage storage = FirebaseStorage.instance;
   XFile? profileImage;
-  String profileUrl = '';
 
   Future profilePic() async {
     loading();
@@ -34,7 +33,10 @@ class ProfileController extends ChangeNotifier {
           "photos/profile pictures/${FirebaseAuth.instance.currentUser!.phoneNumber}");
       UploadTask uploadTask = reference.putFile((i.File(profileImage!.path)));
       String location = await uploadTask.snapshot.ref.getDownloadURL();
-      profileUrl = location;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+          .update({'profilePic': location});
       Get.close(1);
     } catch (e) {
       'image not selected';

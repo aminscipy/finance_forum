@@ -24,8 +24,10 @@ class Profile extends StatelessWidget {
                       }),
                       child: CircleAvatar(
                         backgroundImage: const AssetImage('images/default.jpg'),
-                        foregroundImage:
-                            NetworkImage(profileController.profileUrl),
+                        foregroundImage: profileController.snapEmpty
+                            ? null
+                            : NetworkImage(
+                                profileController.snapshot!.get('profilePic')),
                         radius: 60,
                       )),
                   const SizedBox(

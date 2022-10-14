@@ -57,10 +57,10 @@ class AuthController extends ChangeNotifier {
       Get.close(1);
       if (user.additionalUserInfo!.isNewUser) {
         getSnackBar('Welcome!', 'Please complete your profile.');
-        Get.to(() => const CompleteProfile());
+        Get.offAll(() => const CompleteProfile());
       } else {
         getSnackBar('Verified!', 'You are Logged In.');
-        Get.to(() => const Home());
+        Get.offAll(() => const Home());
       }
     } on FirebaseAuthException {
       Get.close(1);
@@ -104,10 +104,11 @@ class AuthController extends ChangeNotifier {
         'dob': dob,
         'followers': [],
         'following': [],
+        'profilePic': ''
       });
       Get.close(1);
       getSnackBar('You are all set!', 'Start exlporing or add your own post');
-      Get.to(() => const Home());
+      Get.offAll(() => const Home());
     } else {
       Get.close(1);
       getSnackBar('Oops!', 'Please fill in required fields.');

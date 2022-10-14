@@ -22,6 +22,7 @@ class OtpVerify extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
               child: TextField(
+                keyboardType: TextInputType.number,
                 onChanged: ((value) {
                   authController.otp = value;
                 }),
