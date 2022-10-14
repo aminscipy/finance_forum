@@ -1,8 +1,6 @@
 import 'package:finance_forum/constants.dart';
 import 'package:finance_forum/controllers/profile_controller.dart';
-import 'package:finance_forum/views/complete_profile.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatelessWidget {
@@ -13,6 +11,7 @@ class Profile extends StatelessWidget {
     return Consumer<ProfileController>(
         builder: (context, profileController, child) => SafeArea(
                 child: Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Colors.blueAccent,
               body: Column(
                 children: [
@@ -33,30 +32,78 @@ class Profile extends StatelessWidget {
                   const SizedBox(
                     height: 30,
                   ),
-                  tile(
-                    Icons.person,
-                    profileController.snapEmpty
-                        ? ''
-                        : profileController.snapshot!.get('name'),
-                  ),
-                  tile(
-                    Icons.verified_user,
-                    profileController.snapEmpty
-                        ? ''
-                        : profileController.snapshot!.get('username'),
-                  ),
-                  tile(
-                    Icons.female,
-                    profileController.snapEmpty
-                        ? ''
-                        : profileController.snapshot!.get('gender'),
-                  ),
-                  tile(
-                    Icons.calendar_month,
-                    profileController.snapEmpty
-                        ? ''
-                        : profileController.snapshot!.get('dob'),
-                  ),
+                  Row(children: [
+                    Expanded(
+                        child: tile(
+                      Icons.person,
+                      profileController.snapEmpty
+                          ? ''
+                          : profileController.snapshot!.get('name'),
+                    )),
+                    IconButton(
+                        onPressed: () {
+                          profileController.editProfile(
+                              context, 'name', TextInputType.name);
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ))
+                  ]),
+                  Row(children: [
+                    Expanded(
+                        child: tile(
+                      Icons.verified_user,
+                      profileController.snapEmpty
+                          ? ''
+                          : profileController.snapshot!.get('username'),
+                    )),
+                    IconButton(
+                        onPressed: () {
+                          profileController.editProfile(
+                              context, 'username', TextInputType.name);
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ))
+                  ]),
+                  Row(children: [
+                    Expanded(
+                        child: tile(
+                      Icons.female,
+                      profileController.snapEmpty
+                          ? ''
+                          : profileController.snapshot!.get('gender'),
+                    )),
+                    IconButton(
+                        onPressed: () {
+                          profileController.editProfile(
+                              context, 'gender', TextInputType.name);
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ))
+                  ]),
+                  Row(children: [
+                    Expanded(
+                        child: tile(
+                      Icons.calendar_month,
+                      profileController.snapEmpty
+                          ? ''
+                          : profileController.snapshot!.get('dob'),
+                    )),
+                    IconButton(
+                        onPressed: () {
+                          profileController.editProfile(
+                              context, 'dob', TextInputType.number);
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ))
+                  ]),
                   tile(
                     Icons.people,
                     profileController.snapEmpty
@@ -81,27 +128,34 @@ class Profile extends StatelessWidget {
                         ? ''
                         : profileController.snapshot!.get('phoneNumber'),
                   ),
-                  tile(
-                    Icons.app_registration,
-                    profileController.snapEmpty
-                        ? ''
-                        : profileController.snapshot!.get('sebi'),
-                  ),
+                  Row(children: [
+                    Expanded(
+                        child: tile(
+                      Icons.app_registration,
+                      profileController.snapEmpty
+                          ? ''
+                          : profileController.snapshot!.get('sebi'),
+                    )),
+                    IconButton(
+                        onPressed: () {
+                          profileController.editProfile(
+                              context, 'sebi', TextInputType.name);
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ))
+                  ]),
                   const SizedBox(height: 20),
                   const Text(
                     'Your mobile number and birth date is not visible to others',
                     style: TextStyle(color: Colors.white),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const CompleteProfile());
-                    },
-                    child: const Text(
-                      'Want to edit your profile details? click here',
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.left,
-                    ),
-                  )
+                  const Text(
+                    'Your data is safe. will not be used for any other purpose',
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             )));

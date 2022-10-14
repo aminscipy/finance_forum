@@ -44,4 +44,51 @@ class ProfileController extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  editProfile(context, hint, format) {
+    String updatedValue = '';
+    try {
+      Get.defaultDialog(
+        title: 'Update',
+        backgroundColor: Colors.lightBlue,
+        content: Column(children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextField(
+              cursorColor: Colors.black,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: hint,
+              ),
+              keyboardType: format,
+              onChanged: (value) {
+                updatedValue = value;
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.blueAccent),
+              onPressed: () async {
+                Get.close(1);
+                loading();
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+                    .update({hint: updatedValue});
+                Get.close(1);
+              },
+              child: const Text(
+                'Submit',
+                style: TextStyle(color: Colors.white),
+              ))
+        ]),
+      );  
+    } catch (e) {
+      'no changes made';
+    }
+    notifyListeners();
+  }
 }
