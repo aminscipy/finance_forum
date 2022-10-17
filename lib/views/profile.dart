@@ -7,7 +7,6 @@ class Profile extends StatelessWidget {
   const Profile({super.key});
   @override
   Widget build(BuildContext context) {
-    Provider.of<ProfileController>(context).getData();
     return Consumer<ProfileController>(
         builder: (context, profileController, child) => SafeArea(
                 child: Scaffold(
