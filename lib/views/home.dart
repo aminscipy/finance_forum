@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finance_forum/controllers/add_stock_controller.dart';
+import 'package:finance_forum/controllers/post_controller.dart';
 import 'package:finance_forum/controllers/profile_controller.dart';
 import 'package:finance_forum/views/create_post.dart';
 import 'package:finance_forum/views/profile.dart';
@@ -14,9 +16,11 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<ProfileController>(context).getData();
-    return Consumer3<AuthController, AddStockController, ProfileController>(
+    Provider.of<PostController>(context).getPostData();
+    return Consumer4<AuthController, AddStockController, ProfileController,
+        PostController>(
       builder: (context, authController, addStockController, profileController,
-              child) =>
+              postController, child) =>
           Scaffold(
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
@@ -109,7 +113,7 @@ class Home extends StatelessWidget {
                         },
                         padding: const EdgeInsets.all(4),
                         scrollDirection: Axis.vertical,
-                        itemCount: addStockController.stockList.length,
+                        itemCount: postController.postListLength,
                         itemBuilder: ((context, index) {
                           return Container(
                               alignment: Alignment.center,
@@ -120,60 +124,78 @@ class Home extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: (() {
-                                            //should go to the profile of post owner
-                                          }),
-                                          child: CircleAvatar(
-                                            backgroundImage: const AssetImage(
-                                                'images/default.jpg'),
-                                            foregroundImage: profileController
-                                                    .snapEmpty
-                                                ? null
-                                                : NetworkImage(profileController
-                                                    .snapshot!
-                                                    .get('profilePic')),
-                                            radius: 20,
-                                          )),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            profileController.snapEmpty
-                                                ? ''
-                                                : profileController.snapshot!
-                                                    .get('name'),
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            profileController.snapEmpty
-                                                ? ''
-                                                : '@${profileController.snapshot!.get('username')}',
-                                            style: const TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
+                                      Row(children: [
+                                        GestureDetector(
+                                            behavior:
+                                                HitTestBehavior.translucent,
+                                            onTap: (() {
+                                              //should go to the profile of post owner
+                                            }),
+                                            child: CircleAvatar(
+                                              backgroundImage: const AssetImage(
+                                                  'images/default.jpg'),
+                                              foregroundImage: profileController
+                                                      .snapEmpty
+                                                  ? null
+                                                  : NetworkImage(
+                                                      profileController
+                                                          .snapshot!
+                                                          .get('profilePic')),
+                                              radius: 20,
+                                            )),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              profileController.snapEmpty
+                                                  ? ''
+                                                  : profileController.snapshot!
+                                                      .get('name'),
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              profileController.snapEmpty
+                                                  ? ''
+                                                  : '@${profileController.snapshot!.get('username')}',
+                                              style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )
+                                      ]),
                                       const SizedBox(width: 20),
-                                      GestureDetector(
-                                          onTap: () {
-                                            //should change to following when clicked },
-                                          },
-                                          child: const Icon(Icons.person_add)),
-                                      const SizedBox(width: 40),
-                                      const Text('10/10/22, 12:15',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold))
+                                      Row(
+                                        children: [
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      //should change to following when clicked },
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.person_add_alt_1,
+                                                      size: 21,
+                                                    )),
+                                                const Text('now',
+                                                    style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ]),
+                                        ],
+                                      )
                                     ],
                                   ),
                                   const SizedBox(height: 20),
@@ -201,11 +223,8 @@ class Home extends StatelessWidget {
                                   SizedBox(
                                     height: 40,
                                     child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Column(
                                           children: [
@@ -222,7 +241,6 @@ class Home extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(width: 10),
                                         Column(
                                           children: [
                                             GestureDetector(
@@ -239,7 +257,6 @@ class Home extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(width: 10),
                                         Column(
                                           children: [
                                             GestureDetector(
@@ -256,7 +273,6 @@ class Home extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(width: 10),
                                         Column(
                                           children: [
                                             GestureDetector(
@@ -272,7 +288,6 @@ class Home extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(width: 10),
                                       ],
                                     ),
                                   ),

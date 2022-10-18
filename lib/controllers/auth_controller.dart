@@ -104,7 +104,8 @@ class AuthController extends ChangeNotifier {
         'dob': dob,
         'followers': [],
         'following': [],
-        'profilePic': ''
+        'profilePic': '',
+        'posts': []
       });
       Get.close(1);
       getSnackBar('You are all set!', 'Start exlporing or add your own post');

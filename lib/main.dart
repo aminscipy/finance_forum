@@ -1,5 +1,6 @@
 import 'package:finance_forum/controllers/auth_controller.dart';
 import 'package:finance_forum/controllers/add_stock_controller.dart';
+import 'package:finance_forum/controllers/post_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +18,9 @@ void main() async {
       create: (context) => ProfileController(),
     ),
     ChangeNotifierProvider<AddStockController>(
-        create: (context) => AddStockController())
+        create: (context) => AddStockController()),
+    ChangeNotifierProvider<PostController>(
+        create: (context) => PostController())
   ], builder: (context, child) => const MyApp()));
 }
 

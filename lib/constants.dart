@@ -34,6 +34,7 @@ class TextInputField extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         child: TextField(
+            maxLength: 25,
             onChanged: onChanged,
             keyboardType: textInputType,
             cursorColor: Colors.red,

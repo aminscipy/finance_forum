@@ -32,11 +32,11 @@ class ProfileController extends ChangeNotifier {
       Reference reference = storage.ref().child(
           "photos/profile pictures/${FirebaseAuth.instance.currentUser!.phoneNumber}");
       UploadTask uploadTask = reference.putFile((i.File(profileImage!.path)));
-      String location = await uploadTask.snapshot.ref.getDownloadURL();
+      String profileUrl = await uploadTask.snapshot.ref.getDownloadURL();
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
-          .update({'profilePic': location});
+          .update({'profilePic': profileUrl});
       Get.close(1);
     } catch (e) {
       'image not selected';
@@ -55,6 +55,7 @@ class ProfileController extends ChangeNotifier {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: TextField(
+              maxLength: 25,
               cursorColor: Colors.black,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
@@ -85,7 +86,7 @@ class ProfileController extends ChangeNotifier {
                 style: TextStyle(color: Colors.white),
               ))
         ]),
-      );  
+      );
     } catch (e) {
       'no changes made';
     }
