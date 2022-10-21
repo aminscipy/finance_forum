@@ -14,6 +14,7 @@ class CompleteProfile extends StatelessWidget {
     String gender = '';
     String sebi = '';
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.blueAccent,
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [

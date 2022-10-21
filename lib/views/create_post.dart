@@ -63,6 +63,7 @@ class CreatePost extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
+              Navigator.pop(context);
               postController.post();
             },
             style: TextButton.styleFrom(backgroundColor: Colors.white),

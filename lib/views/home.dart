@@ -4,6 +4,7 @@ import 'package:finance_forum/controllers/post_controller.dart';
 import 'package:finance_forum/controllers/profile_controller.dart';
 import 'package:finance_forum/views/create_post.dart';
 import 'package:finance_forum/views/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -16,7 +17,6 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<ProfileController>(context).getData();
-    Provider.of<PostController>(context).getPostData();
     return Consumer4<AuthController, AddStockController, ProfileController,
         PostController>(
       builder: (context, authController, addStockController, profileController,
@@ -92,7 +92,6 @@ class Home extends StatelessWidget {
                               addStockController.removeStock(index);
                             },
                             child: Container(
-                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
                                   color: Colors.black12),
@@ -106,195 +105,280 @@ class Home extends StatelessWidget {
                           );
                         })),
                   ),
-                  Expanded(
-                    child: ListView.separated(
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(height: 3);
-                        },
-                        padding: const EdgeInsets.all(4),
-                        scrollDirection: Axis.vertical,
-                        itemCount: postController.postListLength,
-                        itemBuilder: ((context, index) {
-                          return Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Colors.black12),
+                  StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('posts')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const CircularProgressIndicator(
+                            backgroundColor: Colors.blue,
+                          );
+                        }
+                        final posts = snapshot.data!.docs;
+                        return Expanded(
+                          child: ListView.separated(
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(height: 3);
+                              },
                               padding: const EdgeInsets.all(4),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(children: [
-                                        GestureDetector(
-                                            behavior:
-                                                HitTestBehavior.translucent,
-                                            onTap: (() {
-                                              //should go to the profile of post owner
-                                            }),
-                                            child: CircleAvatar(
-                                              backgroundImage: const AssetImage(
-                                                  'images/default.jpg'),
-                                              foregroundImage: profileController
-                                                      .snapEmpty
-                                                  ? null
-                                                  : NetworkImage(
-                                                      profileController
-                                                          .snapshot!
-                                                          .get('profilePic')),
-                                              radius: 20,
-                                            )),
-                                        const SizedBox(width: 10),
-                                        Column(
+                              scrollDirection: Axis.vertical,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: ((context, index) {
+                                return Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        color: Colors.black12),
+                                    padding: const EdgeInsets.all(4),
+                                    child: Column(
+                                      children: [
+                                        Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              profileController.snapEmpty
-                                                  ? ''
-                                                  : profileController.snapshot!
-                                                      .get('name'),
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              profileController.snapEmpty
-                                                  ? ''
-                                                  : '@${profileController.snapshot!.get('username')}',
-                                              style: const TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold),
+                                            Row(children: [
+                                              GestureDetector(
+                                                  behavior: HitTestBehavior
+                                                      .translucent,
+                                                  onTap: (() {
+                                                    //should g
+                                                    //o to the profile of post owner
+                                                  }),
+                                                  child: CircleAvatar(
+                                                    backgroundImage:
+                                                        const AssetImage(
+                                                            'images/default.jpg'),
+                                                    foregroundImage:
+                                                        NetworkImage(
+                                                            posts[index].get(
+                                                                'profile pic')),
+                                                    radius: 20,
+                                                  )),
+                                              const SizedBox(width: 10),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    posts[index].get('name'),
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    '@${posts[index].get('username')}',
+                                                    style: const TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  )
+                                                ],
+                                              )
+                                            ]),
+                                            const SizedBox(width: 20),
+                                            Row(
+                                              children: [
+                                                Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: [
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            postController
+                                                                .following(posts[
+                                                                        index]
+                                                                    .get(
+                                                                        'owner'));
+                                                          },
+                                                          child: profileController
+                                                                  .snapEmpty
+                                                              ? const Icon(Icons
+                                                                  .person_add_alt_1)
+                                                              : profileController
+                                                                      .snapshot!
+                                                                      .get(
+                                                                          'followers')
+                                                                      .contains(posts[
+                                                                              index]
+                                                                          .get(
+                                                                              'owner'))
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .check,
+                                                                      color: Colors
+                                                                          .blue,
+                                                                    )
+                                                                  : const Icon(Icons
+                                                                      .person_add_alt_1)),
+                                                      Text(
+                                                          posts[index]
+                                                              .get('timestamp')
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                    ]),
+                                              ],
                                             )
                                           ],
-                                        )
-                                      ]),
-                                      const SizedBox(width: 20),
-                                      Row(
-                                        children: [
-                                          Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                GestureDetector(
+                                        ),
+                                        const Divider(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              posts[index]
+                                                  .get('symbol')
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            Text(
+                                                posts[index]
+                                                    .get('price when posted')
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500))
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Text(
+                                          posts[index]
+                                              .get('opinion')
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        const SizedBox(height: 3),
+                                        const Divider(),
+                                        SizedBox(
+                                          height: 40,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: Text(
+                                                        posts[index]
+                                                            .get('likes')
+                                                            .length
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                  ),
+                                                  GestureDetector(
                                                     onTap: () {
-                                                      //should change to following when clicked },
+                                                      postController.liked(
+                                                          posts[index].id);
                                                     },
+                                                    child: Icon(
+                                                      Iconsax.heart5,
+                                                      color: posts[index]
+                                                              .get('likes')
+                                                              .contains(FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser!
+                                                                  .phoneNumber)
+                                                          ? Colors.red
+                                                          : null,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: Text(
+                                                        posts[index]
+                                                            .get('dislikes')
+                                                            .length
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      postController.disliked(
+                                                          posts[index].id);
+                                                    },
+                                                    child: Icon(
+                                                        Icons.heart_broken,
+                                                        color: posts[index]
+                                                                .get('dislikes')
+                                                                .contains(FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser!
+                                                                    .phoneNumber)
+                                                            ? Colors.red
+                                                            : null),
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: Text(
+                                                        posts[index]
+                                                            .get('comments')
+                                                            .length
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {},
                                                     child: const Icon(
-                                                      Icons.person_add_alt_1,
-                                                      size: 21,
-                                                    )),
-                                                const Text('now',
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                              ]),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: const [
-                                      Text(
-                                        'tata motors',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text('396.40',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500))
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                      'TATA motors will go up when result are posted, i think results are on tuesday and till then we need to wait if results are good then go long or if results are bad then go short',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500)),
-                                  const SizedBox(height: 3),
-                                  const Divider(),
-                                  SizedBox(
-                                    height: 40,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: const Text('1M',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500)),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: const Icon(Iconsax.heart5),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: const Text('20k',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500)),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: const Icon(
-                                                  Icons.heart_broken),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: const Text('50k',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500)),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child:
-                                                  const Icon(Iconsax.message1),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: const Text('10k',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500)),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: const Icon(Iconsax.share5),
-                                            ),
-                                          ],
+                                                        Iconsax.message1),
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: Text(
+                                                        posts[index]
+                                                            .get('share')
+                                                            .length
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: const Icon(
+                                                        Iconsax.share5),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                ],
-                              ));
-                        })),
-                  )
+                                    ));
+                              })),
+                        );
+                      })
                 ],
               )),
     );
