@@ -9,17 +9,18 @@ class PostController extends ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String symbol = '';
   String opinion = '';
-  DateTime time = DateTime.now();
-  String? phoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
   Future<void> post() async {
     loading();
-    final data = await firestore.collection("users").doc(phoneNumber).get();
+    DocumentSnapshot data = await firestore
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+        .get();
     if (symbol != '' && opinion != '') {
       await firestore.collection('posts').add({
         'name': data.get('name'),
         'username': data.get('username'),
         'profile pic': data.get('profilePic'),
-        'owner': phoneNumber,
+        'owner': FirebaseAuth.instance.currentUser!.phoneNumber,
         'symbol': symbol,
         'opinion': opinion,
         'price when posted': null,
@@ -27,9 +28,11 @@ class PostController extends ChangeNotifier {
         'dislikes': [],
         'comments': [],
         'share': [],
-        "timestamp": DateFormat.yMMMd().add_jm().format(time)
-      }).then((documentSnapshot) =>
-          firestore.collection('users').doc(phoneNumber).update({
+        "timestamp": DateFormat.yMMMd().add_jm().format(DateTime.now())
+      }).then((documentSnapshot) => firestore
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+              .update({
             'posts': FieldValue.arrayUnion([documentSnapshot.id])
           }));
       Get.close(1);
@@ -46,16 +49,19 @@ class PostController extends ChangeNotifier {
   bool isCommented = false;
   bool isShared = false;
   bool isFollowing = false;
+  bool isFollower = false;
 
   liked(index) {
     if (!isLiked) {
       firestore.collection('posts').doc(index).update({
-        'likes': FieldValue.arrayUnion([phoneNumber])
+        'likes': FieldValue.arrayUnion(
+            [FirebaseAuth.instance.currentUser!.phoneNumber])
       });
       isLiked = true;
     } else {
       firestore.collection('posts').doc(index).update({
-        'likes': FieldValue.arrayRemove([phoneNumber])
+        'likes': FieldValue.arrayRemove(
+            [FirebaseAuth.instance.currentUser!.phoneNumber])
       });
       isLiked = false;
     }
@@ -65,12 +71,14 @@ class PostController extends ChangeNotifier {
   disliked(index) {
     if (!isDisliked) {
       firestore.collection('posts').doc(index).update({
-        'dislikes': FieldValue.arrayUnion([phoneNumber])
+        'dislikes': FieldValue.arrayUnion(
+            [FirebaseAuth.instance.currentUser!.phoneNumber])
       });
       isDisliked = true;
     } else {
       firestore.collection('posts').doc(index).update({
-        'dislikes': FieldValue.arrayRemove([phoneNumber])
+        'dislikes': FieldValue.arrayRemove(
+            [FirebaseAuth.instance.currentUser!.phoneNumber])
       });
       isDisliked = false;
     }
@@ -79,17 +87,38 @@ class PostController extends ChangeNotifier {
 
   following(owner) {
     if (!isFollowing) {
-      firestore.collection('users').doc(phoneNumber).update({
-        'followers': FieldValue.arrayUnion([owner])
+      firestore
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+          .update({
+        'following': FieldValue.arrayUnion([owner])
       });
       isFollowing = true;
-      print('hello');
     } else {
-      firestore.collection('users').doc(phoneNumber).update({
-        'followers': FieldValue.arrayRemove([owner])
+      firestore
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+          .update({
+        'following': FieldValue.arrayRemove([owner])
       });
       isFollowing = false;
-      print(owner);
+    }
+    notifyListeners();
+  }
+
+  followers(owner) {
+    if (!isFollower) {
+      firestore.collection('users').doc(owner).update({
+        'followers': FieldValue.arrayUnion(
+            [FirebaseAuth.instance.currentUser!.phoneNumber])
+      });
+      isFollower = true;
+    } else {
+      firestore.collection('users').doc(owner).update({
+        'followers': FieldValue.arrayRemove(
+            [FirebaseAuth.instance.currentUser!.phoneNumber])
+      });
+      isFollower = false;
     }
     notifyListeners();
   }

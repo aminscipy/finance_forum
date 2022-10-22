@@ -17,6 +17,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<ProfileController>(context).getData();
+    String? phoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
     return Consumer4<AuthController, AddStockController, ProfileController,
         PostController>(
       builder: (context, authController, addStockController, profileController,
@@ -43,14 +44,14 @@ class Home extends StatelessWidget {
                     '\$ Finance Forum',
                   ),
                   actions: [
-                    IconButton(
-                        onPressed: () {
-                          addStockController.addStock();
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          size: 25,
-                        )),
+                    // IconButton(
+                    //     onPressed: () {
+                    //       addStockController.addStock();
+                    //     },
+                    //     icon: const Icon(
+                    //       Icons.add,
+                    //       size: 25,
+                    //     )),
                     PopupMenuButton(
                       itemBuilder: (context) {
                         return [
@@ -76,35 +77,35 @@ class Home extends StatelessWidget {
                   ]),
               body: Column(
                 children: [
-                  SizedBox(
-                    height: 32,
-                    child: ListView.separated(
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(width: 3);
-                        },
-                        padding:
-                            const EdgeInsets.only(left: 4, right: 4, top: 4),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: addStockController.stockList.length,
-                        itemBuilder: ((context, index) {
-                          return GestureDetector(
-                            onLongPress: () {
-                              addStockController.removeStock(index);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Colors.black12),
-                              padding: const EdgeInsets.all(4),
-                              child: Text(
-                                addStockController.stockList[index],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          );
-                        })),
-                  ),
+                  // SizedBox(
+                  //   height: 32,
+                  //   child: ListView.separated(
+                  //       separatorBuilder: (context, index) {
+                  //         return const SizedBox(width: 3);
+                  //       },
+                  //       padding:
+                  //           const EdgeInsets.only(left: 4, right: 4, top: 4),
+                  //       scrollDirection: Axis.horizontal,
+                  //       itemCount: addStockController.stockList.length,
+                  //       itemBuilder: ((context, index) {
+                  //         return GestureDetector(
+                  //           onLongPress: () {
+                  //             addStockController.removeStock(index);
+                  //           },
+                  //           child: Container(
+                  //             decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.circular(4),
+                  //                 color: Colors.black12),
+                  //             padding: const EdgeInsets.all(4),
+                  //             child: Text(
+                  //               addStockController.stockList[index],
+                  //               style: const TextStyle(
+                  //                   fontWeight: FontWeight.bold),
+                  //             ),
+                  //           ),
+                  //         );
+                  //       })),
+                  // ),
                   StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('posts')
@@ -192,27 +193,36 @@ class Home extends StatelessWidget {
                                                                         index]
                                                                     .get(
                                                                         'owner'));
+                                                            postController
+                                                                .followers(posts[
+                                                                        index]
+                                                                    .get(
+                                                                        'owner'));
                                                           },
-                                                          child: profileController
-                                                                  .snapEmpty
-                                                              ? const Icon(Icons
-                                                                  .person_add_alt_1)
-                                                              : profileController
-                                                                      .snapshot!
+                                                          child: phoneNumber ==
+                                                                  posts[index]
                                                                       .get(
-                                                                          'followers')
-                                                                      .contains(posts[
-                                                                              index]
+                                                                          'owner')
+                                                              ? const SizedBox()
+                                                              : (profileController
+                                                                      .snapEmpty
+                                                                  ? const Icon(Icons
+                                                                      .person_add_alt_1)
+                                                                  : profileController
+                                                                          .snapshot!
                                                                           .get(
+                                                                              'following')
+                                                                          .contains(posts[index].get(
                                                                               'owner'))
-                                                                  ? const Icon(
-                                                                      Icons
-                                                                          .check,
-                                                                      color: Colors
-                                                                          .blue,
-                                                                    )
-                                                                  : const Icon(Icons
-                                                                      .person_add_alt_1)),
+                                                                      ? const Icon(
+                                                                          Icons
+                                                                              .check,
+                                                                          color:
+                                                                              Colors.blue,
+                                                                        )
+                                                                      : const Icon(
+                                                                          Icons
+                                                                              .person_add_alt_1))),
                                                       Text(
                                                           posts[index]
                                                               .get('timestamp')
@@ -239,13 +249,13 @@ class Home extends StatelessWidget {
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.w500),
                                             ),
-                                            Text(
-                                                posts[index]
-                                                    .get('price when posted')
-                                                    .toString(),
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w500))
+                                            // Text(
+                                            //     posts[index]
+                                            //         .get('price when posted')
+                                            //         .toString(),
+                                            //     style: const TextStyle(
+                                            //         fontWeight:
+                                            //             FontWeight.w500))
                                           ],
                                         ),
                                         const SizedBox(height: 20),
@@ -287,10 +297,8 @@ class Home extends StatelessWidget {
                                                       Iconsax.heart5,
                                                       color: posts[index]
                                                               .get('likes')
-                                                              .contains(FirebaseAuth
-                                                                  .instance
-                                                                  .currentUser!
-                                                                  .phoneNumber)
+                                                              .contains(
+                                                                  phoneNumber)
                                                           ? Colors.red
                                                           : null,
                                                     ),
@@ -320,10 +328,8 @@ class Home extends StatelessWidget {
                                                         Icons.heart_broken,
                                                         color: posts[index]
                                                                 .get('dislikes')
-                                                                .contains(FirebaseAuth
-                                                                    .instance
-                                                                    .currentUser!
-                                                                    .phoneNumber)
+                                                                .contains(
+                                                                    phoneNumber)
                                                             ? Colors.red
                                                             : null),
                                                   ),

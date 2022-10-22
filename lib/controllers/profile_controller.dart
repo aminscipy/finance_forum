@@ -11,15 +11,19 @@ class ProfileController extends ChangeNotifier {
   DocumentSnapshot<Map<String, dynamic>>? snapshot;
   bool snapEmpty = true;
   getData() async {
-    await FirebaseFirestore.instance.disableNetwork();
-    await FirebaseFirestore.instance.enableNetwork();
-    final data = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
-        .get();
-    snapshot = data;
-    snapEmpty = false;
-    notifyListeners();
+    try {
+      await FirebaseFirestore.instance.disableNetwork();
+      await FirebaseFirestore.instance.enableNetwork();
+      final data = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+          .get();
+      snapshot = data;
+      snapEmpty = false;
+      notifyListeners();
+    } catch (e) {
+      'error';
+    }
   }
 
   FirebaseStorage storage = FirebaseStorage.instance;
