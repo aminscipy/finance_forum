@@ -61,16 +61,31 @@ class CreatePost extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              postController.post();
-            },
-            style: TextButton.styleFrom(backgroundColor: Colors.white),
-            child: const Text(
-              'Post',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
+          Row(
+            children: [
+              const SizedBox(
+                width: 11,
+              ),
+              TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.black12),
+                onPressed: () {
+                  Navigator.pop(context);
+                  postController.post();
+                },
+                child: const Text(
+                  'Post',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              TextButton(
+                  onPressed: () {
+                    postController.postPicture();
+                  },
+                  child: const Icon(
+                    Icons.attachment,
+                    color: Colors.white,
+                  )),
+            ],
           )
         ]),
       ),

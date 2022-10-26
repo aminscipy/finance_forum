@@ -203,7 +203,9 @@ class Home extends StatelessWidget {
                                                                   posts[index]
                                                                       .get(
                                                                           'owner')
-                                                              ? const SizedBox()
+                                                              ? const SizedBox(
+                                                                  height: 20,
+                                                                )
                                                               : (profileController
                                                                       .snapEmpty
                                                                   ? const Icon(Icons
@@ -237,7 +239,9 @@ class Home extends StatelessWidget {
                                             )
                                           ],
                                         ),
-                                        const Divider(),
+                                        const Divider(
+                                          thickness: 1,
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -258,16 +262,42 @@ class Home extends StatelessWidget {
                                             //             FontWeight.w500))
                                           ],
                                         ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          posts[index]
-                                              .get('opinion')
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                posts[index]
+                                                    .get('opinion')
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 3),
-                                        const Divider(),
+                                        const SizedBox(height: 4),
+                                        SizedBox(
+                                          height:
+                                              posts[index].get ('postPic') == ""
+                                                  ? 0
+                                                  : 200,
+                                          width: double.infinity,
+                                          child:
+                                              posts[index].get('postPic') == ""
+                                                  ? null
+                                                  : Image(
+                                                      image: NetworkImage(
+                                                          posts[index]
+                                                              .get('postPic')),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                        ),
+                                        const Divider(
+                                          thickness: 1,
+                                        ),
                                         SizedBox(
                                           height: 40,
                                           child: Row(

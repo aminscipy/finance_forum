@@ -1,14 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finance_forum/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'dart:io' as i;
+import 'package:uuid/uuid.dart';
 
 class PostController extends ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String symbol = '';
   String opinion = '';
+  String postPic = '';
   Future<void> post() async {
     loading();
     DocumentSnapshot data = await firestore
@@ -21,9 +26,9 @@ class PostController extends ChangeNotifier {
         'username': data.get('username'),
         'profile pic': data.get('profilePic'),
         'owner': FirebaseAuth.instance.currentUser!.phoneNumber,
-        'symbol': symbol,
-        'opinion': opinion,
-        'price when posted': null,
+        'symbol': symbol.capitalize,
+        'opinion': opinion.capitalizeFirst,
+        'postPic': postPic,
         'likes': [],
         'dislikes': [],
         'comments': [],
@@ -35,6 +40,7 @@ class PostController extends ChangeNotifier {
               .update({
             'posts': FieldValue.arrayUnion([documentSnapshot.id])
           }));
+      postPic = '';
       Get.close(1);
       getSnackBar('Done!', 'Your post is uploaded.');
     } else {
@@ -119,6 +125,27 @@ class PostController extends ChangeNotifier {
             [FirebaseAuth.instance.currentUser!.phoneNumber])
       });
       isFollower = false;
+    }
+    notifyListeners();
+  }
+
+  FirebaseStorage storage = FirebaseStorage.instance;
+  XFile? postImage;
+  var uuid = const Uuid();
+
+  postPicture() async {
+    loading();
+    try {
+      postImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+      Reference reference = storage.ref().child(
+          "photos/post pictures/${FirebaseAuth.instance.currentUser!.phoneNumber}/${uuid.v4()}");
+      UploadTask uploadTask = reference.putFile((i.File(postImage!.path)));
+      postPic = await (await uploadTask).ref.getDownloadURL();
+      getSnackBar('Done!', 'Your chart snap is added to post');
+      Get.close(1);
+    } catch (e) {
+      'image not selected';
+      Get.close(1);
     }
     notifyListeners();
   }

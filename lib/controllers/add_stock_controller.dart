@@ -59,7 +59,6 @@ class AddStockController extends ChangeNotifier {
       StockInfo info = yfin.getStockInfo(ticker: updatedValue);
       quote = await info.getStockData();
       stockList.add(quote!.ticker!);
-      print(stockList);
       Get.close(1);
       notifyListeners();
     } on YahooApiException catch (e) {
