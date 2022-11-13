@@ -240,6 +240,7 @@ class Home extends StatelessWidget {
                                           ],
                                         ),
                                         const Divider(
+                                          
                                           thickness: 1,
                                         ),
                                         Row(
@@ -281,7 +282,7 @@ class Home extends StatelessWidget {
                                         const SizedBox(height: 4),
                                         SizedBox(
                                           height:
-                                              posts[index].get ('postPic') == ""
+                                              posts[index].get('postPic') == ""
                                                   ? 0
                                                   : 200,
                                           width: double.infinity,
@@ -289,6 +290,8 @@ class Home extends StatelessWidget {
                                               posts[index].get('postPic') == ""
                                                   ? null
                                                   : Image(
+                                                      filterQuality:
+                                                          FilterQuality.medium,
                                                       image: NetworkImage(
                                                           posts[index]
                                                               .get('postPic')),

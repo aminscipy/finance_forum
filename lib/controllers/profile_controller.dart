@@ -54,7 +54,7 @@ class ProfileController extends ChangeNotifier {
     try {
       Get.defaultDialog(
         title: 'Update',
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Colors.grey,
         content: Column(children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -75,7 +75,7 @@ class ProfileController extends ChangeNotifier {
             height: 10,
           ),
           TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.blueAccent),
+              style: TextButton.styleFrom(backgroundColor: Colors.blueGrey),
               onPressed: () async {
                 Get.close(1);
                 loading();

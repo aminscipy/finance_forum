@@ -11,7 +11,7 @@ class Profile extends StatelessWidget {
         builder: (context, profileController, child) => SafeArea(
                 child: Scaffold(
               resizeToAvoidBottomInset: false,
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Colors.blueGrey,
               body: Column(
                 children: [
                   const SizedBox(height: 40),

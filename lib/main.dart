@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        theme: ThemeData.light(),
+        theme: ThemeData.light().copyWith(primaryColor: Colors.blueGrey),
         darkTheme: ThemeData.dark(),
         themeMode: Provider.of<AuthController>(context).mode,
         debugShowCheckedModeBanner: false,

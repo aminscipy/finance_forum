@@ -32,7 +32,7 @@ class TextInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
         child: TextField(
             maxLength: 25,
             onChanged: onChanged,
@@ -40,7 +40,8 @@ class TextInputField extends StatelessWidget {
             cursorColor: Colors.red,
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
-            decoration: kInputDecoration.copyWith(hintText: hint)));
+            decoration: InputDecoration(hintText: hint)));
+    // kInputDecoration.copyWith(hintText: hint)));
   }
 }
 

@@ -1,6 +1,5 @@
 import 'package:finance_forum/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:finance_forum/constants.dart';
 import 'package:provider/provider.dart';
 
 class OtpVerify extends StatelessWidget {
@@ -10,7 +9,7 @@ class OtpVerify extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthController>(
       builder: (context, authController, child) => Scaffold(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blueGrey,
         body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const Text('\$ Finance Forum',
@@ -20,7 +19,7 @@ class OtpVerify extends StatelessWidget {
                     color: Colors.white)),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
               child: TextField(
                 keyboardType: TextInputType.number,
                 onChanged: ((value) {
@@ -30,7 +29,8 @@ class OtpVerify extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
-                decoration: kInputDecoration.copyWith(hintText: 'Enter OTP'),
+                decoration: const InputDecoration(hintText: 'Enter OTP'),
+                // kInputDecoration.copyWith(hintText: 'Enter OTP'),
               ),
             ),
             TextButton(

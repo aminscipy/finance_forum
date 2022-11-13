@@ -14,9 +14,10 @@ class CompleteProfile extends StatelessWidget {
     String gender = '';
     String sebi = '';
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.blueGrey,
       body: Center(
         child: SingleChildScrollView(
+          reverse: true,
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const Text('\$ Finance Forum',
                 style: TextStyle(
