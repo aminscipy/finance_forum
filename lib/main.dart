@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'controllers/profile_controller.dart';
+import 'package:firebase_app_installations/firebase_app_installations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,7 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthController>(
       create: (context) => AuthController(),
+      
     ),
     ChangeNotifierProvider<ProfileController>(
       create: (context) => ProfileController(),
@@ -22,6 +24,7 @@ void main() async {
     ChangeNotifierProvider<PostController>(
         create: (context) => PostController())
   ], builder: (context, child) => const MyApp()));
+  print(await FirebaseInstallations.instance.getId());
 }
 
 class MyApp extends StatelessWidget {
