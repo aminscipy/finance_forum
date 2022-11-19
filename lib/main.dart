@@ -1,6 +1,7 @@
 import 'package:finance_forum/controllers/auth_controller.dart';
 import 'package:finance_forum/controllers/add_stock_controller.dart';
 import 'package:finance_forum/controllers/post_controller.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,7 +15,6 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<AuthController>(
       create: (context) => AuthController(),
-      
     ),
     ChangeNotifierProvider<ProfileController>(
       create: (context) => ProfileController(),
@@ -25,6 +25,7 @@ void main() async {
         create: (context) => PostController())
   ], builder: (context, child) => const MyApp()));
   print(await FirebaseInstallations.instance.getId());
+  print(await FirebaseMessaging.instance.getToken());
 }
 
 class MyApp extends StatelessWidget {
